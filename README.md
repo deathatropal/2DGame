@@ -1,4 +1,4 @@
 2DGame
 ======
 
-gam repository
+game repository
