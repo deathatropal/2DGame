@@ -1,0 +1,161 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+
+import javax.swing.ImageIcon;
+import javax.swing.Timer;
+
+public class Player extends Coordinates
+{
+	private String player = "/res/playerleadright.png";
+	private String firstPunch = "/res/playerpunchingright.png";
+	private String secondPunch = "/res/playerpunchingleft.png";
+	private int dx;
+	private int dy;
+	private int speed;
+	private Image image;
+	private int width;
+	private int height;
+	private Image playerImg;
+	private Image punchImg;
+	private Image punch2Img;
+	private long animateTime;
+	private boolean rightLastHit;
+	private boolean punching;
+	private Legs leg;
+	
+	public Player(int x, int y, int speed, int width, int height)
+	{
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(player));
+		ImageIcon punch1 = new ImageIcon(this.getClass().getResource(firstPunch));
+		ImageIcon punch2 = new ImageIcon(this.getClass().getResource(secondPunch));
+		punchImg = punch1.getImage();
+		punch2Img = punch2.getImage();
+		playerImg = icon.getImage();
+		playerImg = playerImg.getScaledInstance((int) (height * 1.5/ 27), (int) (width*1.5/ 43.5), Image.SCALE_DEFAULT);
+		punchImg = punchImg.getScaledInstance((int) (height * 1.5/ 30.3), (int) (width * 1.5/ 33.3), Image.SCALE_DEFAULT);
+		punch2Img = punch2Img.getScaledInstance((int) (height * 1.5/ 30.3), (int) (width *1.5/ 33.3), Image.SCALE_DEFAULT);
+		image = playerImg;
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.width = width;
+		this.height = height;
+		rightLastHit = true;
+		punching = false;
+		leg = new Legs(x + (imageWidth() / 2), y + (imageHeight() / 2), width, height);
+	}
+	
+	public void move(long timeDiff)
+	{
+		timeDiff = timeDiff / 4;
+		x += dx * speed * timeDiff;
+		y += dy * speed * timeDiff;
+		leg.move(x, y);
+	}
+	
+	public Image getImage()
+	{
+		return image;
+	}
+	
+	public void goLeft()
+	{
+		dx = -1;
+	}
+	public void goRight()
+	{
+		dx = 1;
+	}
+	
+	public void goUp()
+	{
+		dy = -1;
+	}
+	
+	public void goDown()
+	{
+		dy = 1;
+	}
+	
+	public void stopY()
+	{
+		dy = 0;
+	}
+	
+	public void stopX()
+	{
+		dx = 0;
+	}
+	
+	public int getXDirrection()
+	{
+		return dx;
+	}
+	
+	public int getYDirrection()
+	{
+		return dy;
+	}
+	
+	public int imageWidth()
+	{
+		if(punching)
+		{
+			return (int) (width * 1.5/ 43.5);
+		}
+		else
+		{
+			return (int) (width * 1.5/ 33.3);
+		}
+	}
+	
+	public int imageHeight()
+	{
+		if(punching)
+		{
+			return (int) (height * 1.5/ 27);
+		}
+		else
+		{
+			return (int) (height * 1.5/ 30.3);
+		}
+	}	
+	
+	//The attack animation for player
+	public boolean attack(long timeDiff)
+	{
+		if(animateTime == 0)
+		{
+			if(rightLastHit)
+			{
+				image = punchImg;
+				rightLastHit = false;
+			}
+			else
+			{
+				image = punch2Img;
+				rightLastHit = true;
+			}
+		}
+		animateTime = animateTime + timeDiff;
+		if(animateTime > 200)
+		{
+			image = playerImg;
+			animateTime = 0;
+			punching = true;
+			return true;
+		}
+		punching = false;
+		return false;
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+		Graphics2D graphics2 = (Graphics2D) graphics;
+        graphics2.drawImage(leg.getImage(), x - leg.getCenterX(), y - leg.getCenterY(), screen);
+	}
+}

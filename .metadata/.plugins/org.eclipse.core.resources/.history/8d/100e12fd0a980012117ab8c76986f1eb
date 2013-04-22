@@ -1,0 +1,234 @@
+package basics;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.Timer;
+import javax.swing.border.Border;
+
+public class Screen extends JPanel implements ActionListener, MouseMotionListener, MouseListener
+{
+	private Timer timer;
+	private Player player;
+	private Mouse mouse;
+	private int mouseY;
+	private int mouseX;
+	private long startTime;
+	private long endTime;
+	private long timeDifference;
+	private boolean animateDone;
+	
+	/** Draws, updates, etc
+	 * Main game loop
+	 * Main game screen 
+	 */
+	public Screen(int width, int height)
+	{
+        addKeyBinding(this);
+        setFocusable(true);
+        setBackground(Color.BLACK);
+        setDoubleBuffered(true);
+        player = new Player(40, 60, (width*height) / 500000, width, height);
+        mouse = new Mouse(40, 60, width, height);
+        timer = new Timer(5, this);
+        timer.start();
+        addMouseMotionListener(this);
+        addMouseListener(this);
+        endTime = System.currentTimeMillis();
+	}
+	
+	//Paints things onto the screen
+	public void paint(Graphics graphics)
+	{
+		super.paint(graphics);
+		
+		int centerY = player.getY() + (player.imageWidth() / 2);
+		int centerX = player.getX() + (player.imageHeight() / 2);
+		double angle = Math.atan2(centerY - mouseY, centerX - mouseX) - Math.PI / 2;
+        player.drawLegs(graphics, this);
+        player.drawPlayer(graphics, this, mouseX, mouseY);
+        Toolkit.getDefaultToolkit().sync();
+        graphics.dispose();
+	}
+	
+	//Main game loop - timer calls this
+	public void actionPerformed(ActionEvent e) 
+	{
+		startTime = System.currentTimeMillis();
+		timeDifference = startTime - endTime;
+		player.move(timeDifference);
+		if(animateDone == false)
+		{
+			animateDone = player.attack(timeDifference);
+		}
+		repaint();
+		endTime = startTime;
+	}
+	
+	//Makes the keys do things!
+	public void addKeyBinding(JComponent component)
+	{
+		InputMap inputMapA = getInputMap();
+		ActionMap actionMapA = getActionMap();
+		InputMap inputMapD = getInputMap();
+		ActionMap actionMapD = getActionMap();
+		InputMap inputMapW = getInputMap();
+		ActionMap actionMapW = getActionMap();
+		InputMap inputMapS = getInputMap();
+		ActionMap actionMapS = getActionMap();
+		
+		inputMapA.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "A pressed");
+		inputMapA.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "A released");
+		inputMapD.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "D pressed");
+		inputMapD.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "D released");
+		inputMapW.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "W pressed");
+		inputMapW.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "W released");
+		inputMapS.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "S pressed");
+		inputMapS.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), "S released");
+		
+		actionMapA.put("A pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				player.goLeft();
+			}
+			
+		});
+		
+		actionMapA.put("A released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(player.getXDirrection() != 1)
+				{	
+					player.stopX();
+				}
+			}
+		});
+		
+		actionMapD.put("D pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				player.goRight();
+			}
+			
+		});
+		
+		actionMapD.put("D released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(player.getXDirrection() != -1)
+				{
+					player.stopX();
+				}
+			}
+		});
+		
+		actionMapW.put("W pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				player.goUp();
+			}
+			
+		});
+		
+		actionMapW.put("W released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(player.getYDirrection() != 1)
+				{
+					player.stopY();
+				}
+			}
+		});
+		
+		actionMapS.put("S pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				player.goDown();
+			}
+			
+		});
+		
+		actionMapS.put("S released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(player.getYDirrection() != -1)
+				{
+					player.stopY();
+				}
+			}
+		});
+	}
+
+	//Mouse listener and mouse  motion listener methods:
+	public void mouseDragged(MouseEvent e) 
+	{
+		mouseX = e.getX();
+		mouseY = e.getY();
+		repaint();
+	}
+
+	public void mouseMoved(MouseEvent e) 
+	{
+		mouseX = e.getX();
+		mouseY = e.getY();
+		repaint();
+	}
+	
+	public void mouseClicked(MouseEvent e)
+	{
+		
+	}
+
+	public void mouseEntered(MouseEvent arg0) 
+	{
+		
+	}
+
+	public void mouseExited(MouseEvent arg0) 
+	{
+		
+	}
+
+	public void mousePressed(MouseEvent arg0) 
+	{
+		animateDone = player.attack(timeDifference);
+		repaint();
+	}
+	
+	public void mouseReleased(MouseEvent arg0) 
+	{
+		
+	}
+}

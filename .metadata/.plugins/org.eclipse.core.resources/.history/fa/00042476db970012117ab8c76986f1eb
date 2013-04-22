@@ -1,0 +1,18 @@
+package basics;
+
+import java.awt.Image;
+
+public class Legs extends Coordinates
+{
+	private Image image;
+	private int width;
+	private int height;
+	
+	public Legs(int x, int y, int width, int height)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+}

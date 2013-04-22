@@ -1,0 +1,204 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+
+import javax.swing.ImageIcon;
+import javax.swing.Timer;
+
+public class Player extends Coordinates
+{
+	private String playerRightLead = "/res/playerleadright.png";
+	private String playerLeftLead = "/res/playerleadleft.png";
+	private String firstPunch = "/res/playerpunchingright.png";
+	private String secondPunch = "/res/playerpunchingleft.png";
+	private int dx;
+	private int dy;
+	private int speed;
+	private Image image;
+	private int width;
+	private int height;
+	private Image playerRightImg;
+	private Image playerLeftImg;
+	private Image punchImg;
+	private Image punch2Img;
+	private long attackTime;
+	private boolean rightLastHit;
+	private boolean punching;
+	private Legs legs;
+	private long walkTime;
+	private boolean rightLeg;
+	private boolean leftLeg;
+	
+	public Player(int x, int y, int speed, int width, int height)
+	{
+		ImageIcon playerIcon1 = new ImageIcon(this.getClass().getResource(playerRightLead));
+		ImageIcon playerIcon2 = new ImageIcon(this.getClass().getResource(playerLeftLead));
+		ImageIcon punch1 = new ImageIcon(this.getClass().getResource(firstPunch));
+		ImageIcon punch2 = new ImageIcon(this.getClass().getResource(secondPunch));
+		punchImg = punch1.getImage();
+		punch2Img = punch2.getImage();
+		playerRightImg = playerIcon1.getImage();
+		playerLeftImg = playerIcon2.getImage();
+		playerRightImg = playerRightImg.getScaledInstance((int) (height * 1.5/ 27), (int) (width * 1.5/ 43.5), Image.SCALE_DEFAULT);
+		playerLeftImg = playerLeftImg.getScaledInstance((int) (height * 1.5/ 27), (int) (width * 1.5/ 43.5), Image.SCALE_DEFAULT);
+		punchImg = punchImg.getScaledInstance((int) (height * 1.5/ 30.3), (int) (width * 1.5/ 33.3), Image.SCALE_DEFAULT);
+		punch2Img = punch2Img.getScaledInstance((int) (height * 1.5/ 30.3), (int) (width * 1.5/ 33.3), Image.SCALE_DEFAULT);
+		image = playerRightImg;
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.width = width;
+		this.height = height;
+		rightLastHit = true;
+		rightLeg = true;
+		legs = new Legs(x, y, width, height);
+	}
+	
+	public void move(long timeDiff)
+	{
+		timeDiff = timeDiff / 4;
+		x += dx * speed * timeDiff;
+		y += dy * speed * timeDiff;
+		legs.move(x, y);
+	}
+	
+	public Image getImage()
+	{
+		return image;
+	}
+	
+	public void goLeft()
+	{
+		dx = -1;
+	}
+	public void goRight()
+	{
+		dx = 1;
+	}
+	
+	public void goUp()
+	{
+		dy = -1;
+	}
+	
+	public void goDown()
+	{
+		dy = 1;
+	}
+	
+	public void stopY()
+	{
+		dy = 0;
+	}
+	
+	public void stopX()
+	{
+		dx = 0;
+	}
+	
+	public int getXDirrection()
+	{
+		return dx;
+	}
+	
+	public int getYDirrection()
+	{
+		return dy;
+	}
+	
+	public int imageWidth()
+	{
+		if(punching)
+		{
+			return (int) (width * 1.5/ 43.5);
+		}
+		else
+		{
+			return (int) (width * 1.5/ 33.3);
+		}
+	}
+	
+	public int imageHeight()
+	{
+		if(punching)
+		{
+			return (int) (height * 1.5/ 27);
+		}
+		else
+		{
+			return (int) (height * 1.5/ 30.3);
+		}
+	}	
+	
+	//The attack animation for player
+	public boolean attack(long timeDiff)
+	{
+		if(attackTime == 0)
+		{
+			if(rightLastHit)
+			{
+				image = punchImg;
+				rightLastHit = false;
+			}
+			else
+			{
+				image = punch2Img;
+				rightLastHit = true;
+			}
+		}
+		attackTime = attackTime + timeDiff;
+		if(attackTime > 200)
+		{
+			image = playerRightImg;
+			attackTime = 0;
+			punching = true;
+			return true;
+		}
+		punching = false;
+		return false;
+	}
+	
+	public void walkAnimation(long timeDiff)
+	{
+		walkTime = walkTime + timeDiff;
+		if(punching == true)
+		{
+			walkTime = 0;
+		}
+		else
+		{
+			if(walkTime == 0 && rightLeg == false)
+			{
+				image = playerRightImg;
+				rightLeg = true;
+				leftLeg = false;
+			}
+			if(walkTime > 5000 && leftLeg == false)
+			{
+				image = playerLeftImg;
+				walkTime = 0;
+				rightLeg = true;
+				leftLeg = false;
+			}
+		}
+	}
+	
+	public void drawLegs(Graphics graphics, Screen screen)
+	{
+		Graphics2D graphics2 = (Graphics2D) graphics;
+        graphics2.drawImage(legs.getImage(), x, y, screen);
+	}
+	
+	public void drawPlayer(Graphics graphics, Screen screen, int mouseX, int mouseY)
+	{
+		int centerY = y + (imageWidth() / 2);
+		int centerX = x + (imageHeight() / 2);
+		double angle = Math.atan2(centerY - mouseY, centerX - mouseX) - Math.PI / 2;
+        Graphics2D graphics2 = (Graphics2D) graphics;
+        ((Graphics2D)graphics).rotate(angle, centerX, centerY);
+        graphics2.drawImage(image, x, y, screen);
+	}
+}

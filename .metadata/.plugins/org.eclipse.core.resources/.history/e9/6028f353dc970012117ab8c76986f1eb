@@ -1,0 +1,32 @@
+package basics;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Legs extends Coordinates
+{
+	private Image image;
+	private
+	private String shortlegright = "/res/smallplayerlegsrightlead";
+	private String shortlegleft = "/res/smallplayerlegsleftlead";
+	private String longlegright = "/res/playerlegsrightlead";
+	private String longlegleft = "/res/playerlegsleftlead";
+	private String nolegs = "/res/nolegs";
+	private int width;
+	private int height;
+	
+	public Legs(int x, int y, int width, int height)
+	{
+		ImageIcon icon1 = new ImageIcon(this.getClass().getResource(shortlegright));
+		ImageIcon icon2 = new ImageIcon(this.getClass().getResource(shortlegleft));
+		ImageIcon icon3 = new ImageIcon(this.getClass().getResource(longlegright));
+		ImageIcon icon4 = new ImageIcon(this.getClass().getResource(longlegleft));
+		ImageIcon icon5 = new ImageIcon(this.getClass().getResource(nolegs));
+		
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+}
