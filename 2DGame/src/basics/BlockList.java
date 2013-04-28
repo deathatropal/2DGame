@@ -6,12 +6,23 @@ import java.util.LinkedList;
 public class BlockList 
 {
 	private LinkedList<Block> blocks;
+	private LinkedList<Floor> flooring;
 	private Wall wall;
+	private Floor floor;
+	private int width;
+	private int height;
+	private int scale;
+	private boolean lastWasE;
 	
-	public BlockList(Level loader, int width, int height)
+	public BlockList(Level loader, int width, int height, int scale)
 	{
+		this.width = width;
+		this.height = height;
+		this.scale = scale;
 		blocks = new LinkedList();
-		wall = new Wall(0, 0, width, height, false, false);
+		flooring = new LinkedList();
+		wall = new Wall(0, 0, width, height, 0, scale);
+		floor = new Floor(0, 0, width, height, 0, scale);
 		load(loader, width, height);
 	}
 	
@@ -20,11 +31,19 @@ public class BlockList
 		
 	}
 	
-	public void draw(Graphics graphics, Screen screen)
+	public void drawWalls(Graphics graphics, Screen screen)
 	{
 		for(Block block : blocks)
 		{
 			block.draw(graphics, screen);
+		}
+	}
+	
+	public void drawFloor(Graphics graphics, Screen screen)
+	{
+		for(Floor floorInFlooring : flooring)
+		{
+			floorInFlooring.draw(graphics, screen);
 		}
 	}
 	
@@ -55,31 +74,119 @@ public class BlockList
 	private void load(Level loader, int width, int height)
 	{
 		LinkedList list = loader.getInfo();
-		int y = 1250;
-		int x = 1250 + wall.imageWidth();
+		int y = height / 2;
+		int x = width / 2 + wall.imageWidth();
 		
 		for(int i = 0; i < list.size(); i++)
 		{
-			if(list.get(i).equals("w"))
+			if(list.get(i).equals("w")) //brick wall
 			{
-				blocks.add(new Wall(x, y, width, height, false, false));
+				blocks.add(new Wall(x, y, width, height, 0, scale)); //wall
+				lastWasE = false;
 			}
-			if(list.get(i).equals("r"))
+			
+			if(list.get(i).equals("r")) //brick wall turned
 			{
-				blocks.add(new Wall(x, y, width, height, false, true));
+				blocks.add(new Wall(x, y, width, height, 2, scale)); //rotated wall
+				lastWasE = false;
 			}
-			if(list.get(i).equals("c"))
+			
+			if(list.get(i).equals("c")) //corner brick wall
 			{
-				blocks.add(new Wall(x, y, width, height, true, false));
+				blocks.add(new Wall(x, y, width, height, 1, scale)); //corner
+				lastWasE = false;
 			}
-			if(list.get(i).equals("e"))
+			
+			if(list.get(i).equals("i") && lastWasE == false) //brick window
 			{
-				x = 1250;
+				blocks.add(new Wall(x, y, width, height, 3, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("o") && lastWasE == false) //brick window turned
+			{
+				blocks.add(new Wall(x, y, width, height, 4, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("j") && lastWasE == false) //inside wall
+			{
+				blocks.add(new Wall(x, y, width, height, 5, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("k") && lastWasE == false) //inside wall turned
+			{
+				blocks.add(new Wall(x, y, width, height, 6, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("l") && lastWasE == false) //inside wall corner
+			{
+				blocks.add(new Wall(x, y, width, height, 7, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("p") && lastWasE == false) //lamp
+			{
+				blocks.add(new Wall(x, y, width, height, 8, scale));
+				lastWasE = false;
+			}
+			
+			
+			
+			if(list.get(i).equals("f") && lastWasE == false) //side walk
+			{
+				flooring.add(new Floor(x, y, width, height, 0, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals(" ") && lastWasE == false) //fancy ground
+			{
+				flooring.add(new Floor(x, y, width, height, 1, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("q") && lastWasE == false) //tiled floor white
+			{
+				flooring.add(new Floor(x, y, width, height, 2, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("x") && lastWasE == false) //tiled floor black
+			{
+				flooring.add(new Floor(x, y, width, height, 3, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("v") && lastWasE == false) //door way
+			{
+				flooring.add(new Floor(x, y, width, height, 4, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("y") && lastWasE == false) // door way turned
+			{
+				flooring.add(new Floor(x, y, width, height, 5, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("b") && lastWasE == false) //end of fancy ground
+			{
+				flooring.add(new Floor(x, y, width, height, 6, scale));
+				lastWasE = false;
+			}
+			
+			if(list.get(i).equals("e")) //end
+			{
+				x = width / 2;
 				y = y + wall.imageHeight();
+				lastWasE = true;
 			}
 			else
 			{
 				x = x + wall.imageWidth();
+				lastWasE = false;
 			}
 		}
 	}

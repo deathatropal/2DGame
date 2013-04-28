@@ -3,45 +3,36 @@ package basics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 public class Block extends Coordinates
 {
 	public Image image;
+	public Rectangle blockRect;
 	
-	public Block(int x, int y)
+	public Block(int x, int y, int imageHeight, int imageWidth)
 	{
 		this.x = x;
 		this.y = y;
+		blockRect = new Rectangle(x, y, imageWidth, imageHeight);
 	}
 	
 	public boolean canMoveY(Player player, int imageHeight, int imageWidth, double futureMoveY)
 	{
-		if(player.getCenterX() >= x && player.getCenterX() <= x + imageWidth)
+		Rectangle futureRect = new Rectangle(player.x, (int) futureMoveY, player.imageWidth(), player.imageHeight());
+		if(futureRect.intersects(blockRect))
 		{
-			if(player.y > y + imageHeight && futureMoveY + player.imageHeight() <= y)
-			{
-				return false;
-			}
-			if(player.y < y + imageHeight && futureMoveY + player.imageHeight() >= y + imageHeight)
-			{
-				return false;
-			}
+			return false;
 		}
 		return true;
 	}
 	
 	public boolean canMoveX(Player player, int imageHeight, int imageWidth, double futureMoveX)
 	{
-		if(player.getCenterY() >= y && player.getCenterY() <= y + imageHeight)
+		Rectangle futureRect = new Rectangle((int) futureMoveX, player.y, player.imageWidth(), player.imageHeight());
+		if(futureRect.intersects(blockRect))
 		{
-			if(player.x > x + imageWidth && futureMoveX + player.imageWidth() <= x)
-			{
-				return false;
-			}
-			if(player.x < x + imageWidth && futureMoveX + player.imageWidth() >= x + imageWidth)
-			{
-				return false;
-			}
+			return false;
 		}
 		return true;
 	}

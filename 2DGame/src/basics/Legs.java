@@ -131,7 +131,7 @@ public class Legs extends Coordinates
 			animationFinished = true;
 			image = nl;
 		}
-		if(walkTime > 50 && walkTime < 75)
+		if(walkTime > 100 && walkTime < 200)
 		{
 			tinyLegs = true;
 			shortLegs = false;
@@ -145,7 +145,7 @@ public class Legs extends Coordinates
 				image = tll;
 			}
 		}
-		if(walkTime > 75 && walkTime < 125)
+		if(walkTime > 200 && walkTime < 300)
 		{
 			tinyLegs = false;
 			shortLegs = true;
@@ -158,7 +158,7 @@ public class Legs extends Coordinates
 				image = sll;
 			}
 		}
-		if(walkTime > 125 && walkTime < 175)
+		if(walkTime > 300 && walkTime < 400)
 		{
 			shortLegs = false;
 			tinyLegs = false;
@@ -171,7 +171,7 @@ public class Legs extends Coordinates
 				image = lll;
 			}
 		}
-		if(walkTime > 175 && walkTime < 225)
+		if(walkTime > 400 && walkTime < 500)
 		{
 			shortLegs = true;
 			tinyLegs = false;
@@ -184,7 +184,7 @@ public class Legs extends Coordinates
 				image = sll;
 			}
 		}
-		if(walkTime > 225 && walkTime < 250)
+		if(walkTime > 500 && walkTime < 600)
 		{
 			shortLegs = false;
 			tinyLegs = true;
@@ -197,7 +197,7 @@ public class Legs extends Coordinates
 				image = tll;
 			}
 		}
-		if(walkTime > 300)
+		if(walkTime > 600)
 		{
 			if(right)
 			{

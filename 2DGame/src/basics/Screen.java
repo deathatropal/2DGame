@@ -45,6 +45,8 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
 	private int playerOffsetY;
 	private BlockList bList;
 	
+	private final int scale = 2;
+	
 	public Level levelLoader;
 	public int level;
 	public Player player;
@@ -60,9 +62,9 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
         levelLoader = new Level(level);
+        bList = new BlockList(levelLoader, width, height, scale);
         player = new Player(levelLoader.getPlayerX(), levelLoader.getPlayerY(), ((width*height) * 1.25) / 500000, width, height);
         mouse = new Mouse(player.getCenterX(), player.getCenterY(), width, height);
-        bList = new BlockList(levelLoader, width, height);
         timer = new Timer(5, this);
         timer.start();
         this.width = width;
@@ -86,13 +88,16 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
 		}
 		graphics.translate(translatePointX, translatePointY);
 		AffineTransform originalTransform = ((Graphics2D) graphics).getTransform();
+        bList.drawFloor(graphics, this);
+        ((Graphics2D) graphics).setTransform(originalTransform);
         player.drawLegs(graphics, this);
         ((Graphics2D) graphics).setTransform(originalTransform);
         player.drawPlayer(graphics, this, mouseX + playerOffsetX, mouseY + playerOffsetY);
         ((Graphics2D) graphics).setTransform(originalTransform);
-        bList.draw(graphics, this);
+        bList.drawWalls(graphics, this);
         ((Graphics2D) graphics).setTransform(originalTransform);
 	    mouse.drawMouse(graphics, this, translatePointX, translatePointY);
+        ((Graphics2D) graphics).setTransform(originalTransform);
         ((Graphics2D) graphics).setTransform(originalTransform);
         Toolkit.getDefaultToolkit().sync();
         graphics.dispose();

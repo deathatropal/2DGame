@@ -55,7 +55,7 @@ public class Player extends Entity
 	
 	public void move(long timeDiff, int levelWidth, int levelHeight, BlockList block)
 	{
-		timeDiff = timeDiff / 3;
+		timeDiff = timeDiff / 4;
 		if((int) x + (dx * speed * timeDiff) != x ||(int) y + (dy * speed * timeDiff) != y)
 		{
 			if((x + (dx * speed * timeDiff) < levelWidth) && (x + (dx * speed * timeDiff) > 0))
