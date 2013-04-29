@@ -1,0 +1,62 @@
+package basics;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Wall extends Block
+{
+	private static int height;
+	private static int width;
+	private static double scale;
+	
+	private String wallRes = "/res/wall.png";
+	private String wallCornerRes = "/res/wallcorner.png";
+	private String wallRotatedRes = "/res/wallrotated.png";
+	private Image wallCorner;
+	private Image wallSide;
+	private Image wallRotated;
+	private int wallImage;
+	
+	public Wall(int x, int y, int width, int height, int wallImage, int scale) 
+	{
+		super(x, y, imageWidth(), imageHeight());
+		this.width = width;
+		this.height = height;
+		this.scale = scale;
+		ImageIcon corner = new ImageIcon(this.getClass().getResource(wallCornerRes));
+		ImageIcon wall = new ImageIcon(this.getClass().getResource(wallRes));
+		ImageIcon rWall = new ImageIcon(this.getClass().getResource(wallRotatedRes));
+		wallCorner = corner.getImage();
+		wallSide = wall.getImage();
+		wallRotated = rWall.getImage();
+		wallCorner = wallCorner.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+		wallSide = wallSide.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+		wallRotated = wallRotated.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+		if(wallImage == 1)
+		{
+			image = wallCorner;
+		}
+		else
+		{
+			if(wallImage == 2)
+			{
+				image = wallRotated;
+			}
+			else
+			{
+				image = wallSide;
+			}
+		}
+	}
+	
+	public static int imageWidth()
+	{
+		return (int) (width * scale/ 125);
+	}
+	
+	public static int imageHeight()
+	{
+		return (int) (height * scale/ 125);
+	}
+}

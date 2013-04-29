@@ -1,0 +1,20 @@
+package basics;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class ScanLines extends Coordinates
+{
+	private Image image;
+	
+	public ScanLines()
+	{
+		image = new ImageIcon(this.getClass().getResource("/res/scanlines.png")).getImage();
+	}
+	
+	public void draw(int x, int y, Screen screen)
+	{
+		
+	}
+}

@@ -1,0 +1,316 @@
+package basics;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+
+public class Screen extends JPanel implements ActionListener, MouseMotionListener, MouseListener
+{
+	private Timer timer;
+	private Mouse mouse;
+	private int mouseY;
+	private int mouseX;
+	private boolean attackDone;
+	private boolean wPressed;
+	private boolean sPressed;
+	private boolean aPressed;
+	private boolean dPressed;
+	private long startTime;
+	private long endTime;
+	private long timeDifference;
+	private int width;
+	private int height;
+	private int translatePointX;
+	private int translatePointY;
+	private int xOffset;
+	private int yOffset;
+	private int playerOffsetX;
+	private int playerOffsetY;
+	private int scanLineX;
+	private int scanLineY;
+	private BlockList bList;
+	private ScanLines scanLines;
+	
+	private final int scale = 2;
+	
+	public Level levelLoader;
+	public int level;
+	public Player player;
+	
+	/** Draws, updates, etc
+	 * Main game loop
+	 * Main game screen 
+	 */
+	public Screen(int width, int height, int level)
+	{
+        addKeyBinding(this);
+        setFocusable(true);
+        setBackground(Color.BLACK);
+        setDoubleBuffered(true);
+        levelLoader = new Level(level);
+        bList = new BlockList(levelLoader, width, height, scale);
+        scanLines = new ScanLines(translatePointX, translatePointY, width, height, 1.5);
+        player = new Player(levelLoader.getPlayerX(), levelLoader.getPlayerY(), ((width*height) * 1.25) / 500000, width, height);
+        mouse = new Mouse(player.getCenterX(), player.getCenterY(), width, height);
+        timer = new Timer(5, this);
+        timer.start();
+        this.width = width;
+        this.height = height;
+        this.level = level;
+        addMouseMotionListener(this);
+        addMouseListener(this);
+        endTime = System.currentTimeMillis();
+	}
+	
+	public void paint(Graphics graphics)
+	{
+		super.paint(graphics);
+		if((player.getCenterX() + (width / 2) < levelLoader.getLevelWidth() + player.imageWidth()) && (player.getCenterX() - (width / 2) > 0))
+		{
+			translatePointX = (width / 2) - player.getCenterX();
+		}
+		if((player.getCenterY() + (height / 2) < levelLoader.getLevelHeight() + player.imageHeight()) && (player.getCenterY() - (height / 2) > 0))
+		{
+			translatePointY = (height / 2) - player.getCenterY();
+		}
+		graphics.translate(translatePointX, translatePointY);
+		AffineTransform originalTransform = ((Graphics2D) graphics).getTransform();
+        bList.drawFloor(graphics, this);
+        ((Graphics2D) graphics).setTransform(originalTransform);
+        player.drawLegs(graphics, this);
+        ((Graphics2D) graphics).setTransform(originalTransform);
+        player.drawPlayer(graphics, this, mouseX + playerOffsetX, mouseY + playerOffsetY);
+        ((Graphics2D) graphics).setTransform(originalTransform);
+        bList.drawWalls(graphics, this);
+        ((Graphics2D) graphics).setTransform(originalTransform);
+        scanLines.draw(graphics, this, translatePointX, translatePointY);
+        ((Graphics2D) graphics).setTransform(originalTransform);
+	    mouse.drawMouse(graphics, this, translatePointX, translatePointY);
+        ((Graphics2D) graphics).setTransform(originalTransform);
+        Toolkit.getDefaultToolkit().sync();
+        graphics.dispose();
+	}
+	
+	//Main game loop - timer calls this
+	public void actionPerformed(ActionEvent e) 
+	{
+		startTime = System.currentTimeMillis();
+		timeDifference = startTime - endTime;
+		player.move(timeDifference, levelLoader.getLevelWidth(), levelLoader.getLevelHeight(), bList);
+		if(eventHappening())
+		{
+			player.setMoving(true);
+		}
+		else
+		{
+			player.setMoving(false);
+		}
+		repaint();
+		endTime = startTime;
+	}
+	
+	public void update(long timeDiff)
+	{
+		xOffset = player.getCenterX() - (player.getCenterX());
+		yOffset = player.getCenterY() - (player.getCenterY());
+		playerOffsetX = player.getCenterX() - (player.getCenterX() + (translatePointX));
+		playerOffsetY = player.getCenterY() - (player.getCenterY() + (translatePointY));
+		if(attackDone == false)
+		{
+			attackDone = player.attack(timeDiff);
+		}
+		player.animateImg(timeDiff);
+		player.walk(timeDiff);
+		mouse.move(mouseX + xOffset, mouseY + yOffset);
+		mouse.animateMouse(timeDiff);
+		bList.update(timeDiff);
+		repaint();
+	}
+	
+	//Makes the keys do things!
+	public void addKeyBinding(JComponent component)
+	{
+		InputMap inputMapA = getInputMap();
+		ActionMap actionMapA = getActionMap();
+		InputMap inputMapD = getInputMap();
+		ActionMap actionMapD = getActionMap();
+		InputMap inputMapW = getInputMap();
+		ActionMap actionMapW = getActionMap();
+		InputMap inputMapS = getInputMap();
+		ActionMap actionMapS = getActionMap();
+		
+		inputMapA.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "A pressed");
+		inputMapA.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "A released");
+		inputMapD.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "D pressed");
+		inputMapD.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "D released");
+		inputMapW.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "W pressed");
+		inputMapW.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "W released");
+		inputMapS.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "S pressed");
+		inputMapS.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), "S released");
+		
+		actionMapA.put("A pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				aPressed = true;
+				player.goLeft();
+			}
+			
+		});
+		
+		actionMapA.put("A released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				aPressed = false;
+				if(player.getXDirrection() != 1)
+				{	
+					player.stopX();
+				}
+			}
+		});
+		
+		actionMapD.put("D pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				dPressed = true;
+				player.goRight();
+			}
+			
+		});
+		
+		actionMapD.put("D released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				dPressed = false;
+				if(player.getXDirrection() != -1)
+				{
+					player.stopX();
+				}
+			}
+		});
+		
+		actionMapW.put("W pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				wPressed = true;
+				player.goUp();
+			}
+			
+		});
+		
+		actionMapW.put("W released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				wPressed = false;
+				if(player.getYDirrection() != 1)
+				{
+					player.stopY();
+				}
+			}
+		});
+		
+		actionMapS.put("S pressed", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				sPressed = true;
+				player.goDown();
+			}
+			
+		});
+		
+		actionMapS.put("S released", new AbstractAction()
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				sPressed = false;
+				if(player.getYDirrection() != -1)
+				{
+					player.stopY();
+				}
+			}
+		});
+	}
+
+	//Mouse listener and mouse  motion listener methods:
+	public void mouseDragged(MouseEvent e) 
+	{
+		mouseX = e.getX();
+		mouseY = e.getY();
+		repaint();
+	}
+
+	public void mouseMoved(MouseEvent e) 
+	{
+		mouseX = e.getX();
+		mouseY = e.getY();
+		repaint();
+	}
+	
+	public void mouseClicked(MouseEvent e)
+	{
+		
+	}
+
+	public void mouseEntered(MouseEvent arg0) 
+	{
+		
+	}
+
+	public void mouseExited(MouseEvent arg0) 
+	{
+		
+	}
+
+	public void mousePressed(MouseEvent arg0) 
+	{
+		if(SwingUtilities.isLeftMouseButton(arg0))
+		{
+			attackDone = player.attack(timeDifference);
+		}
+		else if(SwingUtilities.isRightMouseButton(arg0))
+		{
+			
+		}
+		repaint();
+	}
+	
+	public void mouseReleased(MouseEvent arg0) 
+	{
+		
+	}
+	
+	private boolean eventHappening()
+	{
+		if(aPressed || dPressed || wPressed || sPressed)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}

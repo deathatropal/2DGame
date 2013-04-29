@@ -1,0 +1,17 @@
+package basics;
+
+public class ScanLines extends Coordinates
+{
+	private String scanLinesRes = "/res/scanlines.png";
+	
+	public ScanLines(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void draw()
+	{
+		
+	}
+}

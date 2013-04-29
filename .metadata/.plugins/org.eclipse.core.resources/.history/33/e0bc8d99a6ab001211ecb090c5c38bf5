@@ -1,0 +1,54 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
+public class Block extends Coordinates
+{
+	public Image image;
+	
+	public Block(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	public boolean canMoveY(Player player, int imageHeight, int imageWidth, double futureMoveY)
+	{
+		if(player.x + 3 * (player.imageWidth() / 6) >= x && player.x + (player.imageWidth() / 6) <= x + imageWidth)
+		{
+			if(player.y >= y + imageHeight && futureMoveY <= y + imageHeight)
+			{
+				return false;
+			}
+			if(player.y < y && futureMoveY + player.imageHeight() >= y)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean canMoveX(Player player, int imageHeight, int imageWidth, double futureMoveX)
+	{
+		if(player.y + 3 * (player.imageHeight() / 6) >= y && player.y + (player.imageHeight() / 6) <= y + imageHeight)
+		{
+			if(player.x >= x + imageWidth && futureMoveX <= x + imageWidth)
+			{
+				return false;
+			}
+			if(player.x < x && futureMoveX + player.imageWidth() >= x)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+		Graphics2D graphics2 = (Graphics2D) graphics;
+		graphics2.drawImage(image, x, y, screen);
+	}
+}

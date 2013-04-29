@@ -1,0 +1,85 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.geom.AffineTransform;
+
+import javax.swing.ImageIcon;
+
+public class Floor extends Scenery
+{
+	private static int width;
+	private static int height;
+	private static int scale;
+	private int floorPicture;
+	private Image image;
+	private Image sideWalkImg;
+	private Image fancyGroundImg;
+	private Image fancyGroundEndImg;
+	private Image fancyGroundEndRotatedImg;
+	private Image tiledFloorImg;
+	private String sideWalkRes = "/res/sidewalkfull.png";
+	private String fancyRes = "/res/fancyground.png";
+	private String fancyEndRes = "/res/fancygroundend.png";
+	private String fancyEndResRotated = "/res/fancygroundendrotated.png";
+	private String tiledFloorRes = "/res/tiledfloor.png";
+	
+	public Floor(int x, int y, int width, int height, int floorPicture, int scale)
+	{
+		super(x, y);
+		this.width = width;
+		this.height = height;
+		this.scale = scale;
+		this.floorPicture = floorPicture;
+		ImageIcon sideWalkIcon = new ImageIcon(this.getClass().getResource(sideWalkRes));
+		ImageIcon fancyGroundIcon = new ImageIcon(this.getClass().getResource(fancyRes));
+		ImageIcon fancyGroundEndIcon = new ImageIcon(this.getClass().getResource(fancyEndRes));
+		ImageIcon fancyGroundEndRotatedIcon = new ImageIcon(this.getClass().getResource(fancyEndResRotated));
+		sideWalkImg = sideWalkIcon.getImage();
+		fancyGroundImg = fancyGroundIcon.getImage();
+		fancyGroundEndImg = fancyGroundEndIcon.getImage();
+		fancyGroundEndRotatedImg = fancyGroundEndRotatedIcon.getImage();
+		if(floorPicture == 0)
+		{
+			image = sideWalkImg;
+			image = image.getScaledInstance((int) (width * scale / 41.6), (int) (height * scale/ 41.6), Image.SCALE_DEFAULT);
+		}
+		else
+		{
+			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+		}
+		if(floorPicture == 1)
+		{
+			image = fancyGroundImg;
+		}
+		else if(floorPicture == 2)
+		{
+			image = tiledFloorImg;
+		}
+		else if(floorPicture == 3)
+		{
+			image = fancyGroundEndImg;
+		}
+		else if(floorPicture == 4)
+		{
+			image = fancyGroundEndRotatedImg;
+		}
+	}
+	
+	public static int imageWidth()
+	{
+		return (int) (width * scale/ 125);
+	}
+	
+	public static int imageHeight()
+	{
+		return (int) (height * scale/ 125);
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+		Graphics2D graphics2 = (Graphics2D) graphics;
+		graphics2.drawImage(image, x, y, screen);
+	}
+}

@@ -1,0 +1,24 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class ScanLines extends Coordinates
+{
+	private Image image;
+	
+	public ScanLines(int width, int height)
+	{
+		image = new ImageIcon(this.getClass().getResource("/res/scanlines.png")).getImage();
+		image = image.getScaledInstance(width * 2, height * 2, Image.SCALE_DEFAULT);
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+		Graphics2D graphics2 = (Graphics2D) graphics;
+		graphics2.drawImage(image, x, y, screen);
+	}
+}

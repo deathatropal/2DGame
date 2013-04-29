@@ -1,0 +1,26 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+public class Scenery extends Coordinates
+{
+	private Image image;
+	
+	public Scenery(int x, int y, int widthOfImage, int heightOfImage, String imageRes)
+	{
+		this.x = x;
+		this.y = y;
+		image = new ImageIcon(this.getClass().getResource(imageRes)).getImage();
+		image = image.getScaledInstance(widthOfImage, heightOfImage, Image.SCALE_DEFAULT);
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+        Graphics2D graphics2 = (Graphics2D) graphics;
+        graphics2.drawImage(image, x, y, screen);
+	}
+}

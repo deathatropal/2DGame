@@ -43,7 +43,10 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
 	private int yOffset;
 	private int playerOffsetX;
 	private int playerOffsetY;
+	private int scanLineX;
+	private int scanLineY;
 	private BlockList bList;
+	private ScanLines scanLines;
 	
 	private final int scale = 2;
 	
@@ -63,6 +66,7 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
         setDoubleBuffered(true);
         levelLoader = new Level(level);
         bList = new BlockList(levelLoader, width, height, scale);
+        scanLines = new ScanLines(width, height, 1.5);
         player = new Player(levelLoader.getPlayerX(), levelLoader.getPlayerY(), ((width*height) * 1.25) / 500000, width, height);
         mouse = new Mouse(player.getCenterX(), player.getCenterY(), width, height);
         timer = new Timer(5, this);
@@ -81,10 +85,12 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
 		if((player.getCenterX() + (width / 2) < levelLoader.getLevelWidth() + player.imageWidth()) && (player.getCenterX() - (width / 2) > 0))
 		{
 			translatePointX = (width / 2) - player.getCenterX();
+			scanLineX = player.getCenterX() - (width / 2);
 		}
 		if((player.getCenterY() + (height / 2) < levelLoader.getLevelHeight() + player.imageHeight()) && (player.getCenterY() - (height / 2) > 0))
 		{
 			translatePointY = (height / 2) - player.getCenterY();
+			scanLineY = player.getCenterY() - (height / 2);
 		}
 		graphics.translate(translatePointX, translatePointY);
 		AffineTransform originalTransform = ((Graphics2D) graphics).getTransform();
@@ -96,8 +102,9 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
         ((Graphics2D) graphics).setTransform(originalTransform);
         bList.drawWalls(graphics, this);
         ((Graphics2D) graphics).setTransform(originalTransform);
-	    mouse.drawMouse(graphics, this, translatePointX, translatePointY);
+        scanLines.draw(graphics, this, scanLineX, scanLineY);
         ((Graphics2D) graphics).setTransform(originalTransform);
+	    mouse.drawMouse(graphics, this, translatePointX, translatePointY);
         ((Graphics2D) graphics).setTransform(originalTransform);
         Toolkit.getDefaultToolkit().sync();
         graphics.dispose();

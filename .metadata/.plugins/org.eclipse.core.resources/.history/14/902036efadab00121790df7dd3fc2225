@@ -1,0 +1,61 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+
+public class Block extends Coordinates
+{
+	public Image image;
+	public Rectangle blockRect;
+	
+	public Block(int x, int y, int imageHeight, int imageWidth)
+	{
+		this.x = x;
+		this.y = y;
+		blockRect = new Rectangle(x, y, imageWidth, imageHeight);
+	}
+	
+	public boolean canMoveY(Player player, int imageHeight, int imageWidth, double futureMoveX, double futureMoveY)
+	{
+		Rectangle playerRect = new Rectangle(player.x, player.y, player.imageWidth(), player.imageHeight());
+		Rectangle futureRect = new Rectangle((int) futureMoveX, (int) futureMoveY, player.imageWidth(), player.imageHeight());
+		if(player.getCenterX() >= x && player.getCenterX() <= x + imageWidth)
+		{
+			if(player.y >= y + imageHeight && futureMoveY <= y + imageHeight)
+			{
+				return false;
+			}
+			if(player.y + player.imageHeight() <= y && futureMoveY + player.imageHeight() >= y)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean canMoveX(Player player, int imageHeight, int imageWidth, double futureMoveX, double futureMoveY)
+	{
+		Rectangle playerRect = new Rectangle(player.x, player.y, player.imageWidth(), player.imageHeight());
+		Rectangle futureRect = new Rectangle((int) futureMoveX, (int) futureMoveY, player.imageWidth(), player.imageHeight());
+		if(player.getCenterY() >= y && player.getCenterY() <= y + imageHeight)
+		{
+			if(player.x >= x + imageWidth && futureMoveX <= x + imageWidth)
+			{
+				return false;
+			}
+			if(player.x + player.imageWidth() <= x && futureMoveX + player.imageWidth() >= x)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+		Graphics2D graphics2 = (Graphics2D) graphics;
+		graphics2.drawImage(image, x, y, screen);
+	}
+}

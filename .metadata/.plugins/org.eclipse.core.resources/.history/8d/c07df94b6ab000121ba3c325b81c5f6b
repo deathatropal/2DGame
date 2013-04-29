@@ -1,0 +1,15 @@
+package basics;
+
+public class ScanLines extends Coordinates
+{
+	public ScanLines(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void draw()
+	{
+		
+	}
+}

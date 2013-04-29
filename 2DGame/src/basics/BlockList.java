@@ -177,6 +177,12 @@ public class BlockList
 				lastWasE = false;
 			}
 			
+			if(list.get(i).equals("u") && lastWasE == false) //light wood
+			{
+				flooring.add(new Floor(x, y, width, height, 7, scale));
+				lastWasE = false;
+			}
+			
 			if(list.get(i).equals("e")) //end
 			{
 				x = width / 2;

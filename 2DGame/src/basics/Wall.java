@@ -92,15 +92,35 @@ public class Wall extends Block
 		}
 		if(wallImage == 3)
 		{
-			image = image.getScaledInstance((int) (width * scale / 125), (int) (height * scale/ 31.25), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale / 71.4), (int) (height * scale/ 31.25), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 4)
 		{
-			image = image.getScaledInstance((int) (width * scale / 31.25), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale / 31.25), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
 		}
-		else
+		else if(wallImage == 0)
 		{
-			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
+		}
+		else if(wallImage == 5)
+		{
+			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 90.9), Image.SCALE_DEFAULT);
+		}
+		else if(wallImage == 2)
+		{
+			image = image.getScaledInstance((int) (width * scale/ 71.4), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+		}
+		else if(wallImage == 6)
+		{
+			image = image.getScaledInstance((int) (width * scale/ 90.9), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+		}
+		else if(wallImage == 7)
+		{
+			image = image.getScaledInstance((int) (width * scale/ 90.9), (int) (height * scale/ 90.9), Image.SCALE_DEFAULT);
+		}
+		else if(wallImage == 1)
+		{
+			image = image.getScaledInstance((int) (width * scale/ 71.4), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
 		}
 	}
 	
