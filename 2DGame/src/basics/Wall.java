@@ -8,7 +8,12 @@ public class Wall extends Block
 {
 	private static int height;
 	private static int width;
+	private static int wallImage;
 	private static double scale;
+	private static double thirtyTwo;
+	private static double eight;
+	private static double sixteen;
+	private static double twentyFour;
 	
 	private String wallRes = "/res/wall.png";
 	private String wallCornerRes = "/res/wallcorner.png";
@@ -33,9 +38,17 @@ public class Wall extends Block
 	public Wall(int x, int y, int width, int height, int wallImage, int scale) 
 	{
 		super(x, y, imageWidth(), imageHeight());
+		
 		this.width = width;
 		this.height = height;
 		this.scale = scale;
+		this.wallImage = wallImage;
+		
+		eight = 125;
+		sixteen = 62.5;
+		twentyFour = 41.6;
+		thirtyTwo = 31.2;
+		
 		ImageIcon corner = new ImageIcon(this.getClass().getResource(wallCornerRes));
 		ImageIcon wall = new ImageIcon(this.getClass().getResource(wallRes));
 		ImageIcon rWall = new ImageIcon(this.getClass().getResource(wallRotatedRes));
@@ -45,6 +58,7 @@ public class Wall extends Block
 		ImageIcon wallNormalRotatedIcon = new ImageIcon(this.getClass().getResource(wallNormalRotatedRes));
 		ImageIcon wallNormalCornerIcon = new ImageIcon(this.getClass().getResource(wallNormalCornerRes));
 		ImageIcon lampIcon = new ImageIcon(this.getClass().getResource(lampRes));
+		
 		wallCorner = corner.getImage();
 		wallSide = wall.getImage();
 		wallRotated = rWall.getImage();
@@ -54,6 +68,7 @@ public class Wall extends Block
 		wallNormalRotatedImg = wallNormalRotatedIcon.getImage();
 		wallNormalCornerImg = wallNormalCornerIcon.getImage();
 		lampImg = lampIcon.getImage();
+		
 		if(wallImage == 1)
 		{
 			image = wallCorner;
@@ -92,27 +107,27 @@ public class Wall extends Block
 		}
 		if(wallImage == 3)
 		{
-			image = image.getScaledInstance((int) (width * scale / 71.4), (int) (height * scale/ 31.25), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale / 71.4), (int) (height * scale/ thirtyTwo), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 4)
 		{
-			image = image.getScaledInstance((int) (width * scale / 31.25), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale / thirtyTwo), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 0)
 		{
-			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale/ eight), (int) (height * scale/ 71.4), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 5)
 		{
-			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 90.9), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale/ eight), (int) (height * scale/ 90.9), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 2)
 		{
-			image = image.getScaledInstance((int) (width * scale/ 71.4), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale/ 71.4), (int) (height * scale/ eight), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 6)
 		{
-			image = image.getScaledInstance((int) (width * scale/ 90.9), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale/ 90.9), (int) (height * scale/ eight), Image.SCALE_DEFAULT);
 		}
 		else if(wallImage == 7)
 		{
@@ -126,11 +141,35 @@ public class Wall extends Block
 	
 	public static int imageWidth()
 	{
-		return (int) (width * scale/ 125);
+		return (int) (width * scale / eight);
 	}
 	
 	public static int imageHeight()
 	{
-		return (int) (height * scale/ 125);
+		return (int) (height * scale / eight);
+	}
+	
+	public static int imageWidthModified()
+	{
+		if(wallImage == 4)
+		{
+			return (int) (width * scale/ thirtyTwo);
+		}
+		else
+		{
+			return (int) (width * scale/ eight);
+		}
+	}
+	
+	public static int imageHeightModified()
+	{
+		if(wallImage == 3)
+		{
+			return (int) (height * scale/ thirtyTwo);
+		}
+		else
+		{
+			return (int) (height * scale/ eight);
+		}
 	}
 }

@@ -105,7 +105,7 @@ public class Start extends JFrame
 		
 		screen = new Screen(width, height, save.currentLevel);
 		add(screen);
-		ImageIcon icon = new ImageIcon(this.getClass().getResource("/res/nolegs.png"));
+		ImageIcon icon = new ImageIcon(this.getClass().getResource("/playerres/nolegs.png"));
 		Image image = icon.getImage();
 		Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(0, 0), "Custom cursor");
 		this.getContentPane().setCursor(customCursor);

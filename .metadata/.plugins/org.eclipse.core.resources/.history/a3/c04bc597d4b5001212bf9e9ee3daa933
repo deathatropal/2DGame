@@ -1,0 +1,190 @@
+package basics;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.geom.Line2D;
+import java.util.LinkedList;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+
+public class Enemy extends Entity
+{
+	private Image enemyCentered;
+	private Image enemyRightLead;
+	private Image enemyLeftLead;
+	private String enemyRes = "/playerres/playercentered.png";
+	private String enemyRightLeadRes = "/playerres/playerleadright.png";
+	private String enemyLeftLeadRes = "/playerres/playerleadleft.png";
+	private int interestPointY;
+	private int interestPointX;
+	private double rotation;
+	private boolean first;
+	private boolean canSee;
+	private long animationTime;
+	private boolean punching;
+	private boolean moving;
+	
+	public Enemy(int x, int y, int speed, int width, int height)
+	{
+		ImageIcon enemyIcon1 = new ImageIcon(this.getClass().getResource(enemyRes));
+		ImageIcon enemyIcon2 = new ImageIcon(this.getClass().getResource(enemyRightLeadRes));
+		ImageIcon enemyIcon3 = new ImageIcon(this.getClass().getResource(enemyLeftLeadRes));
+		enemyCentered = enemyIcon1.getImage();
+		enemyRightLead = enemyIcon2.getImage();
+		enemyLeftLead = enemyIcon3.getImage();
+		image = enemyCentered;
+		image = image.getScaledInstance((int) (width * 1.5/ 27), (int) (height * 1.5/ 30.3), Image.SCALE_DEFAULT);
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.width = width;
+		this.height = height;
+		interestPointX = 0;
+		interestPointY = 0;
+		first = true;
+	}
+	
+	public Image getImage()
+	{
+		return image;
+	}
+	
+	public void move(long timeDiff)
+	{
+		timeDiff = timeDiff / 3;
+		double angle = 0;
+		angle = angleHelp();
+		if(first == false)
+		{
+			if(x != interestPointX)
+			{
+				moving = true;
+				x += Math.cos(angle) * (speed * timeDiff);
+			}
+			if(y != interestPointY)
+			{
+				moving = true;
+				y += Math.sin(angle) * (speed * timeDiff);
+			}
+			if(y == interestPointY && x == interestPointX)
+			{
+				moving = false;
+			}
+		}
+		first = false;
+	}
+	
+	private double angleHelp()
+	{
+		double angle = Math.toDegrees(Math.atan2(interestPointY - y, interestPointX - x));
+		
+		if(angle < 0)
+		{
+			angle += 360;
+		}
+		
+		return Math.toRadians(angle);
+	}
+	
+	public void draw(Graphics graphics, Screen screen)
+	{
+		rotation = Math.atan2(getCenterY() - interestPointY, getCenterX() - interestPointX) - Math.PI / 2;
+		Graphics2D graphics2 = (Graphics2D) graphics;
+		((Graphics2D)graphics).rotate(rotation, getCenterX(), getCenterY());
+        graphics2.drawImage(image, x, y, screen);
+	}
+	
+	public void checkForPlayer(Player player, LinkedList<Block> blocks)
+	{
+		for(Block block: blocks)
+		{
+			if(clearLine(player, (Wall) block) == false)
+			{
+				canSee = false;
+			}
+		}
+		if(canSee)
+		{
+			interestPointX = player.getCenterX();
+			interestPointY = player.getCenterY();
+		}
+		canSee = true;
+	}
+	
+	private boolean clearLine(Player player, Wall wall)
+	{
+		Line2D line = new Line2D.Float(x, y, player.getX(), player.getY());
+		if(wall.getRect().intersectsLine(line))
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	public int imageWidth()
+	{
+		return (int) (width * 1.5/ 27);
+	}
+	
+	public int imageHeight()
+	{
+		return (int) (height * 1.5/ 30.3);
+	}	
+	
+	public int getCenterX()
+	{
+		return x + (imageWidth() / 2);
+	}
+	
+	public int getCenterY()
+	{
+		return y + (imageHeight() / 2);
+	}
+	
+	public void animateLegs(long timeDiff)
+	{
+		
+	}
+	
+	public void animateBody(long timeDiff)
+	{
+		if(punching == false)
+		{
+			if(moving == false && animationTime > 0)
+			{
+				animationTime = animationTime - timeDiff;
+			}
+			else
+			{
+				animationTime = animationTime + timeDiff;
+			}
+			if(animationTime < 0)
+			{
+				animationTime = 0;
+			}
+			if(animationTime > 400)
+			{
+				animationTime = 0;
+			}
+			if(animationTime <= 0)
+			{
+				image = enemyCentered;
+			}
+			if(animationTime > 100 && animationTime < 200)
+			{
+				image = enemyRightLead;
+			}
+			if(animationTime > 200 && animationTime < 300)
+			{
+				image = enemyCentered;
+			}
+			if(animationTime > 300 && animationTime < 400)
+			{
+				image = enemyLeftLead;
+			}
+		}
+	}
+}

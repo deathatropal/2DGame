@@ -13,6 +13,11 @@ public class Floor extends Scenery
 	private static int height;
 	private static int scale;
 	
+	private static double thirtyTwo;
+	private static double eight;
+	private static double sixteen;
+	private static double twentyFour;
+	
 	private Image image;
 	private Image sideWalkImg;
 	private Image fancyGroundImg;
@@ -22,6 +27,7 @@ public class Floor extends Scenery
 	private Image tiledDoorRotatedImg;
 	private Image fancyGroundEndImg;
 	private Image lightWoodImg;
+	private Image grateImg;
 	
 	private String sideWalkRes = "/res/sidewalkfull.png";
 	private String fancyRes = "/res/fancyground.png";
@@ -31,6 +37,7 @@ public class Floor extends Scenery
 	private String tiledDoorRotatedRes = "/res/tileddoorrotated.png";
 	private String fancyGroundEndRes = "/res/fancygroundend.png";
 	private String lightWoodRes = "/res/lightwood.png";
+	private String grateRes = "/res/grate.png";
 	
 	public Floor(int x, int y, int width, int height, int floorPicture, int scale)
 	{
@@ -40,6 +47,11 @@ public class Floor extends Scenery
 		this.height = height;
 		this.scale = scale;
 		
+		eight = 125;
+		sixteen = 62.5;
+		twentyFour = 41.6;
+		thirtyTwo = 31.2;
+		
 		ImageIcon sideWalkIcon = new ImageIcon(this.getClass().getResource(sideWalkRes));
 		ImageIcon fancyGroundIcon = new ImageIcon(this.getClass().getResource(fancyRes));
 		ImageIcon tileBlackIcon = new ImageIcon(this.getClass().getResource(tileBlackRes));
@@ -48,6 +60,7 @@ public class Floor extends Scenery
 		ImageIcon tiledDoorRotIcon = new ImageIcon(this.getClass().getResource(tiledDoorRotatedRes));
 		ImageIcon fancyGroundEndIcon = new ImageIcon(this.getClass().getResource(fancyGroundEndRes));
 		ImageIcon lightWoodIcon = new ImageIcon(this.getClass().getResource(lightWoodRes));
+		ImageIcon grateIcon = new ImageIcon(this.getClass().getResource(grateRes));
 		
 		sideWalkImg = sideWalkIcon.getImage();
 		fancyGroundImg = fancyGroundIcon.getImage();
@@ -57,6 +70,7 @@ public class Floor extends Scenery
 		tiledDoorRotatedImg = tiledDoorRotIcon.getImage();
 		fancyGroundEndImg = fancyGroundEndIcon.getImage();
 		lightWoodImg = lightWoodIcon.getImage();
+		grateImg	 = grateIcon.getImage();
 		
 		if(floorPicture == 0)
 		{
@@ -90,24 +104,31 @@ public class Floor extends Scenery
 		{
 			image = lightWoodImg;
 		}
+		else if(floorPicture == 8)
+		{
+			image = grateImg;
+		}
+		
+		
+		
 		if(floorPicture == 0)
 		{
-			image = image.getScaledInstance((int) (width * scale / 41.6), (int) (height * scale/ 41.6), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale / twentyFour), (int) (height * scale/ twentyFour), Image.SCALE_DEFAULT);
 		}
 		else
 		{
-			image = image.getScaledInstance((int) (width * scale/ 125), (int) (height * scale/ 125), Image.SCALE_DEFAULT);
+			image = image.getScaledInstance((int) (width * scale/ eight), (int) (height * scale/ eight), Image.SCALE_DEFAULT);
 		}
 	}
 	
 	public static int imageWidth()
 	{
-		return (int) (width * scale/ 125);
+		return (int) (width * scale/ eight);
 	}
 	
 	public static int imageHeight()
 	{
-		return (int) (height * scale/ 125);
+		return (int) (height * scale/ eight);
 	}
 	
 	public void draw(Graphics graphics, Screen screen)

@@ -19,10 +19,10 @@ public class Mouse extends Coordinates
 	{
 		this.x = x;
 		this.y = y;
-		ImageIcon icon = new ImageIcon(this.getClass().getResource("/res/mouse.png"));
-		ImageIcon icon1 = new ImageIcon(this.getClass().getResource("/res/mouse1.png"));
-		ImageIcon icon2 = new ImageIcon(this.getClass().getResource("/res/mouse2.png"));
-		ImageIcon icon3 = new ImageIcon(this.getClass().getResource("/res/mouse3.png"));
+		ImageIcon icon = new ImageIcon(this.getClass().getResource("/mouseres/mouse.png"));
+		ImageIcon icon1 = new ImageIcon(this.getClass().getResource("/mouseres/mouse1.png"));
+		ImageIcon icon2 = new ImageIcon(this.getClass().getResource("/mouseres/mouse2.png"));
+		ImageIcon icon3 = new ImageIcon(this.getClass().getResource("/mouseres/mouse3.png"));
 		mouseImage = icon.getImage();
 		mouseImage1 = icon1.getImage();
 		mouseImage2 = icon2.getImage();

@@ -1,0 +1,63 @@
+package basics;
+
+import java.awt.Graphics;
+import java.util.LinkedList;
+
+public class EnemyList 
+{
+	private LinkedList<Enemy> enemies;
+	
+	public EnemyList(int width, int height)
+	{
+		enemies = new LinkedList();
+		enemies.add(new Enemy(1410, 1410, 1, width, height));
+	}
+	
+	public void drawEnemies(Graphics graphics, Screen screen)
+	{
+		for(Enemy enemy : enemies)
+		{
+			enemy.draw(graphics, screen);
+		}
+	}
+	
+	public void drawEnemyLegs(Graphics graphics, Screen screen)
+	{
+		for(Enemy enemy : enemies)
+		{
+			enemy.drawLegs(graphics, screen);
+		}
+	}
+	
+	public void animateLegs(long timeDiff)
+	{
+		for(Enemy enemy : enemies)
+		{
+			enemy.animateLegs(timeDiff);
+		}
+	}
+	
+	public void animateBody(long timeDiff)
+	{
+		for(Enemy enemy : enemies)
+		{
+			enemy.animateBody(timeDiff);
+		}
+	}
+	
+	public void checkForPlayer(LinkedList blocks, Player player)
+	{
+		for(Enemy enemy : enemies)
+		{
+			enemy.checkForPlayer(player, blocks);
+		}
+	}
+	
+	public void move(long timeDiff)
+	{
+		for(Enemy enemy : enemies)
+		{
+			enemy.move(timeDiff);
+		}
+	}
+}

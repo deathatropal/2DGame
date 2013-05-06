@@ -8,18 +8,19 @@ import java.awt.Rectangle;
 public class Block extends Coordinates
 {
 	public Image image;
+	public Rectangle futureRect;
 	public Rectangle blockRect;
 	
-	public Block(int x, int y, int imageHeight, int imageWidth)
+	public Block(int x, int y, int imageWidth, int imageHeight)
 	{
 		this.x = x;
 		this.y = y;
 		blockRect = new Rectangle(x, y, imageWidth, imageHeight);
 	}
 	
-	public boolean canMoveY(Player player, int imageHeight, int imageWidth, double futureMoveY)
+	public boolean canMoveY(Player player, double futureMoveY)
 	{
-		Rectangle futureRect = new Rectangle(player.x, (int) futureMoveY, player.imageWidth(), player.imageHeight());
+		futureRect = new Rectangle(player.x, (int) futureMoveY, player.imageWidth(), player.imageHeight());
 		if(futureRect.intersects(blockRect))
 		{
 			return false;
@@ -27,9 +28,9 @@ public class Block extends Coordinates
 		return true;
 	}
 	
-	public boolean canMoveX(Player player, int imageHeight, int imageWidth, double futureMoveX)
+	public boolean canMoveX(Player player, double futureMoveX)
 	{
-		Rectangle futureRect = new Rectangle((int) futureMoveX, player.y, player.imageWidth(), player.imageHeight());
+		futureRect = new Rectangle((int) futureMoveX, player.y, player.imageWidth(), player.imageHeight());
 		if(futureRect.intersects(blockRect))
 		{
 			return false;
@@ -41,5 +42,15 @@ public class Block extends Coordinates
 	{
 		Graphics2D graphics2 = (Graphics2D) graphics;
 		graphics2.drawImage(image, x, y, screen);
+	}
+	
+	public void setRect(int imageWidth, int imageHeight)
+	{
+		blockRect = new Rectangle(x, y, imageWidth, imageHeight);
+	}
+	
+	public Rectangle getRect()
+	{
+		return blockRect;
 	}
 }
