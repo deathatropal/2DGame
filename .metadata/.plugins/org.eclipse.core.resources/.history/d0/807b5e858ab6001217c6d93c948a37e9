@@ -61,34 +61,31 @@ public class Enemy extends Entity
 	
 	public void move(long timeDiff)
 	{
-		if(dead == false)
+		timeDiff = timeDiff / 2;
+		double angle = 0;
+		angle = angleHelp();
+		if(first == false)
 		{
-			timeDiff = timeDiff / 2;
-			double angle = 0;
-			angle = angleHelp();
-			if(first == false)
+			if(x != interestPointX)
 			{
-				if(x != interestPointX)
-				{
-					moving = true;
-					legs.setMoving(true);
-					x += Math.cos(angle) * (speed * timeDiff);
-				}
-				if(y != interestPointY)
-				{
-					moving = true;
-					legs.setMoving(true);
-					y += Math.sin(angle) * (speed * timeDiff);
-				}
-				if(y == interestPointY && x == interestPointX)
-				{
-					legs.setMoving(false);
-					moving = false;
-				}
-				legs.move(x, y);
+				moving = true;
+				legs.setMoving(true);
+				x += Math.cos(angle) * (speed * timeDiff);
 			}
-			first = false;
+			if(y != interestPointY)
+			{
+				moving = true;
+				legs.setMoving(true);
+				y += Math.sin(angle) * (speed * timeDiff);
+			}
+			if(y == interestPointY && x == interestPointX)
+			{
+				legs.setMoving(false);
+				moving = false;
+			}
+			legs.move(x, y);
 		}
+		first = false;
 	}
 	
 	private double angleHelp()
@@ -121,22 +118,19 @@ public class Enemy extends Entity
 	
 	public void checkForPlayer(Player player, LinkedList<Block> blocks)
 	{
-		if(dead == false)
+		for(Block block: blocks)
 		{
-			for(Block block: blocks)
+			if(clearLine(player, (Wall) block) == false)
 			{
-				if(clearLine(player, (Wall) block) == false)
-				{
-					canSee = false;
-				}
+				canSee = false;
 			}
-			if(canSee)
-			{
-				interestPointX = player.getCenterX();
-				interestPointY = player.getCenterY();
-			}
-			canSee = true;
 		}
+		if(canSee)
+		{
+			interestPointX = player.getCenterX();
+			interestPointY = player.getCenterY();
+		}
+		canSee = true;
 	}
 	
 	private boolean clearLine(Player player, Wall wall)
@@ -171,54 +165,44 @@ public class Enemy extends Entity
 	
 	public void animateLegs(long timeDiff)
 	{
-		if(dead == false)
-		{
-			legs.walk(timeDiff);
-		}
-		else
-		{
-			legs.removeLegs();
-		}
+		legs.walk(timeDiff);
 	}
 	
 	public void animateBody(long timeDiff)
 	{
-		if(dead == false)
+		if(punching == false)
 		{
-			if(punching == false)
+			if(moving == false && animationTime > 0)
 			{
-				if(moving == false && animationTime > 0)
-				{
-					animationTime = animationTime - timeDiff;
-				}
-				else
-				{
-					animationTime = animationTime + timeDiff;
-				}
-				if(animationTime < 0)
-				{
-					animationTime = 0;
-				}
-				if(animationTime > 400)
-				{
-					animationTime = 0;
-				}
-				if(animationTime <= 0)
-				{
-					image = enemyCentered;
-				}
-				if(animationTime > 100 && animationTime < 200)
-				{
-					image = enemyRightLead;
-				}
-				if(animationTime > 200 && animationTime < 300)
-				{
-					image = enemyCentered;
-				}
-				if(animationTime > 300 && animationTime < 400)
-				{
-					image = enemyLeftLead;
-				}
+				animationTime = animationTime - timeDiff;
+			}
+			else
+			{
+				animationTime = animationTime + timeDiff;
+			}
+			if(animationTime < 0)
+			{
+				animationTime = 0;
+			}
+			if(animationTime > 400)
+			{
+				animationTime = 0;
+			}
+			if(animationTime <= 0)
+			{
+				image = enemyCentered;
+			}
+			if(animationTime > 100 && animationTime < 200)
+			{
+				image = enemyRightLead;
+			}
+			if(animationTime > 200 && animationTime < 300)
+			{
+				image = enemyCentered;
+			}
+			if(animationTime > 300 && animationTime < 400)
+			{
+				image = enemyLeftLead;
 			}
 		}
 	}

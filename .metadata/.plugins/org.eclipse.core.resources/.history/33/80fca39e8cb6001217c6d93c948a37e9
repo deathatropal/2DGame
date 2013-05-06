@@ -220,9 +220,4 @@ public class EnemyLegs extends Coordinates
 	{
 		return animationFinished;
 	}
-	
-	public void removeLegs()
-	{
-		image = nl;
-	}
 }

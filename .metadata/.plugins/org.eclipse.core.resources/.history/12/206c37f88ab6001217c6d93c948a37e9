@@ -3,7 +3,6 @@ package basics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 
 import javax.swing.ImageIcon;
 
@@ -26,7 +25,6 @@ public class Player extends Entity
 	private boolean moving;
 	private long animationTime;
 	private boolean punching;
-	private double angle;
 	
 	public Player(int x, int y, double speed, int width, int height)
 	{
@@ -89,11 +87,10 @@ public class Player extends Entity
 	}	
 	
 	//The attack animation for player
-	public boolean attack(long timeDiff, EnemyList list)
+	public boolean attack(long timeDiff)
 	{
-		int reach = (int) (height * 1.5 / 125); 
-		Point hitPoint = new Point((int) (getCenterX() + (reach * Math.cos(angle))), (int) (getCenterY() + (reach * Math.sin(angle))));
-		list.checkForHit(hitPoint);
+		double angle = angleHelp();
+		
 		if(attackTime == 0)
 		{
 			punching = true;
@@ -117,6 +114,18 @@ public class Player extends Entity
 			return true;
 		}
 		return false;
+	}
+	
+	private double angleHelp()
+	{
+		double angle = Math.toDegrees(Math.atan2(interestPointY - y, interestPointX - x));
+		
+		if(angle < 0)
+		{
+			angle += 360;
+		}
+		
+		return Math.toRadians(angle);
 	}
 	
 	public void walk(long timeDiff)
@@ -195,7 +204,7 @@ public class Player extends Entity
 	{
 		int centerY = getCenterY();
 		int centerX = getCenterX();
-		angle = Math.atan2(centerY - mouseY, centerX - mouseX) - Math.PI / 2;
+		double angle = Math.atan2(centerY - mouseY, centerX - mouseX) - Math.PI / 2;
         Graphics2D graphics2 = (Graphics2D) graphics;
         ((Graphics2D)graphics).rotate(angle, centerX, centerY);
         graphics2.drawImage(image, x, y, screen);

@@ -1,7 +1,6 @@
 package basics;
 
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.LinkedList;
 
 public class EnemyList 
@@ -59,14 +58,6 @@ public class EnemyList
 		for(Enemy enemy : enemies)
 		{
 			enemy.move(timeDiff);
-		}
-	}
-	
-	public void checkForHit(Point point)
-	{
-		for(Enemy enemy : enemies)
-		{
-			enemy.checkForHit(point);
 		}
 	}
 }

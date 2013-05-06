@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-public class EnemyLegs extends Coordinates
+public class Legs extends Coordinates
 {
 	private Image image;
 	private Image slr; //size of leg, name, right or left
@@ -30,7 +30,7 @@ public class EnemyLegs extends Coordinates
 	private boolean moving;
 	private boolean animationFinished;
 	
-	public EnemyLegs(int x, int y, int width, int height)
+	public Legs(int x, int y, int width, int height)
 	{
 		ImageIcon icon1 = new ImageIcon(this.getClass().getResource(shortlegright));
 		ImageIcon icon2 = new ImageIcon(this.getClass().getResource(shortlegleft));
@@ -219,10 +219,5 @@ public class EnemyLegs extends Coordinates
 	public boolean animationDone()
 	{
 		return animationFinished;
-	}
-	
-	public void removeLegs()
-	{
-		image = nl;
 	}
 }

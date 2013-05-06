@@ -175,10 +175,6 @@ public class Enemy extends Entity
 		{
 			legs.walk(timeDiff);
 		}
-		else
-		{
-			legs.removeLegs();
-		}
 	}
 	
 	public void animateBody(long timeDiff)

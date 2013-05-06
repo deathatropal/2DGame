@@ -142,7 +142,7 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
 		playerOffsetY = player.getCenterY() - (player.getCenterY() + (translatePointY));
 		if(attackDone == false)
 		{
-			attackDone = player.attack(timeDiff, enemyList);
+			attackDone = player.attack(timeDiff);
 		}
 		player.animateImg(timeDiff);
 		player.walk(timeDiff);
@@ -300,7 +300,7 @@ public class Screen extends JPanel implements ActionListener, MouseMotionListene
 	{
 		if(SwingUtilities.isLeftMouseButton(arg0))
 		{
-			attackDone = player.attack(timeDifference, enemyList);
+			attackDone = player.attack(timeDifference);
 		}
 		else if(SwingUtilities.isRightMouseButton(arg0))
 		{

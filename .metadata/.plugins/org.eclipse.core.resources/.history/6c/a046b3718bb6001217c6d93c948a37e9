@@ -3,7 +3,6 @@ package basics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 
 import javax.swing.ImageIcon;
 
@@ -91,9 +90,6 @@ public class Player extends Entity
 	//The attack animation for player
 	public boolean attack(long timeDiff, EnemyList list)
 	{
-		int reach = (int) (height * 1.5 / 125); 
-		Point hitPoint = new Point((int) (getCenterX() + (reach * Math.cos(angle))), (int) (getCenterY() + (reach * Math.sin(angle))));
-		list.checkForHit(hitPoint);
 		if(attackTime == 0)
 		{
 			punching = true;

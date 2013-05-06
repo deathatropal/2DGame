@@ -61,34 +61,31 @@ public class Enemy extends Entity
 	
 	public void move(long timeDiff)
 	{
-		if(dead == false)
+		timeDiff = timeDiff / 2;
+		double angle = 0;
+		angle = angleHelp();
+		if(first == false)
 		{
-			timeDiff = timeDiff / 2;
-			double angle = 0;
-			angle = angleHelp();
-			if(first == false)
+			if(x != interestPointX)
 			{
-				if(x != interestPointX)
-				{
-					moving = true;
-					legs.setMoving(true);
-					x += Math.cos(angle) * (speed * timeDiff);
-				}
-				if(y != interestPointY)
-				{
-					moving = true;
-					legs.setMoving(true);
-					y += Math.sin(angle) * (speed * timeDiff);
-				}
-				if(y == interestPointY && x == interestPointX)
-				{
-					legs.setMoving(false);
-					moving = false;
-				}
-				legs.move(x, y);
+				moving = true;
+				legs.setMoving(true);
+				x += Math.cos(angle) * (speed * timeDiff);
 			}
-			first = false;
+			if(y != interestPointY)
+			{
+				moving = true;
+				legs.setMoving(true);
+				y += Math.sin(angle) * (speed * timeDiff);
+			}
+			if(y == interestPointY && x == interestPointX)
+			{
+				legs.setMoving(false);
+				moving = false;
+			}
+			legs.move(x, y);
 		}
+		first = false;
 	}
 	
 	private double angleHelp()
@@ -174,10 +171,6 @@ public class Enemy extends Entity
 		if(dead == false)
 		{
 			legs.walk(timeDiff);
-		}
-		else
-		{
-			legs.removeLegs();
 		}
 	}
 	

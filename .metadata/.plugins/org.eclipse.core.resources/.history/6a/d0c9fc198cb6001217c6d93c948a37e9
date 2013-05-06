@@ -92,7 +92,7 @@ public class Player extends Entity
 	public boolean attack(long timeDiff, EnemyList list)
 	{
 		int reach = (int) (height * 1.5 / 125); 
-		Point hitPoint = new Point((int) (getCenterX() + (reach * Math.cos(angle))), (int) (getCenterY() + (reach * Math.sin(angle))));
+		Point hitPoint = new Point(getCenterX() + reach * Math.cos(angle), getCenterY() + reach * Math.sin(angle));
 		list.checkForHit(hitPoint);
 		if(attackTime == 0)
 		{
